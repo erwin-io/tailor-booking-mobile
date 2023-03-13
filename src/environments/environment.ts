@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://192.168.254.140:3000/api/v1/'
+  apiBaseUrl: 'https://tailor-booking-api.herokuapp.com/api/v1/'
 };
 
 /*

@@ -57,7 +57,7 @@
       "delete": "order-item/"
     },
     "orderItemType": {
-      "getAll": "order-item-type/getAll"
+      "getAll": "order-item-type"
     },
     "dashboard": {
       "getCustomerDashboard": "dashboard/getCustomerDashboard"
