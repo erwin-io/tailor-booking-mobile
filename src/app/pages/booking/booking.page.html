@@ -1,0 +1,64 @@
+<ion-header no-border no-shadow>
+  <ion-toolbar>
+    <div slot="start" style="width: 48px"></div>
+    <ion-title style="text-align: center">Booking</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="isAuthenticated" (click)="history()" >
+        <ion-icon slot="icon-only" name="time-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-refresher *ngIf="!isLoading && superTabs.activeTabIndex === 0" slot="fixed" (ionRefresh)="doRefreshPending($event)" class="refresher-custom">
+    <ion-refresher-content >
+    </ion-refresher-content>
+  </ion-refresher>
+  <ion-refresher *ngIf="!isLoading && superTabs.activeTabIndex === 1" slot="fixed" (ionRefresh)="doRefreshApproved($event)" class="refresher-custom">
+    <ion-refresher-content >
+    </ion-refresher-content>
+  </ion-refresher>
+  <ion-refresher *ngIf="!isLoading && superTabs.activeTabIndex === 2" slot="fixed" (ionRefresh)="doRefreshProcess($event)" class="refresher-custom">
+    <ion-refresher-content >
+    </ion-refresher-content>
+  </ion-refresher>
+    
+  <super-tabs #superTabs (tabChange)="tabChange($event)" [activeTabIndex]="activeTabIndex">
+    <super-tabs-toolbar slot="top" color="primary">
+      <super-tab-button #pendingTabButton>
+        <ion-badge slot="start" color="success">1</ion-badge>
+        <!-- <ion-icon name="hourglass{{ superTabs.activeTabIndex === 0 ? '' : '-outline' }}"></ion-icon> -->
+        <ion-label>Pending</ion-label>    
+      </super-tab-button>
+      <super-tab-button #approvedTabButton>
+        <!-- <ion-icon name="checkbox{{ superTabs.activeTabIndex === 1 ? '' : '-outline' }}"></ion-icon> -->
+        <ion-label>Approved</ion-label>    
+      </super-tab-button>
+      <super-tab-button #processedTabButton>
+        <!-- <ion-icon name="calendar{{ superTabs.activeTabIndex === 2 ? '' : '-outline' }}"></ion-icon> -->
+        <ion-label>Ongoing</ion-label>    
+      </super-tab-button>
+    </super-tabs-toolbar>
+    <super-tabs-container>
+      <super-tab>
+        <ion-content>
+          <app-booking-list-page #pendingListPage [status]="'Pending'" [canEdit]="true"></app-booking-list-page>
+        </ion-content>
+      </super-tab>
+      <super-tab>
+        <ion-content>
+          <app-booking-list-page #approvedListPage [status]="'Approved'"></app-booking-list-page>
+        </ion-content>
+      </super-tab>
+      <super-tab>
+        <ion-content>
+          <app-booking-list-page #processedListPage [status]="'Processed'"></app-booking-list-page>
+        </ion-content>
+      </super-tab>
+    </super-tabs-container>
+  </super-tabs>
+</ion-content>
+
+<div class="sched-controls-bottom">
+  <ion-button [disabled]="isLoading" color="primary" size="large" expand="block" (click)="isAuthenticated ? onOpenAdd() : logout()">{{isAuthenticated ? 'Book new Reservation' : 'Login to book reservation'}}</ion-button>
+</div>

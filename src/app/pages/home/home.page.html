@@ -1,0 +1,145 @@
+<ion-header no-border no-shadow>
+  <ion-toolbar>
+    <div slot="start" style="width: 48px"></div>
+    <ion-title class="ion-text-center">Home</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onShowSettings()">
+        <ion-icon slot="icon-only" name="settings-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-refresher *ngIf="!isLoading" slot="fixed" (ionRefresh)="doRefresh($event)" class="refresher-custom">
+    <ion-refresher-content >
+    </ion-refresher-content>
+  </ion-refresher>
+  <div class="content">
+    <div class="row profile">
+      <div class="col avatar">
+        <ion-avatar>
+          <img [src]="user.userProfilePic" (error)="profilePicErrorHandler($event)">
+        </ion-avatar>
+      </div>
+      <div class="col welcome">
+        <div class="row name">
+          <h2>Hi, {{ user.firstName }}!</h2>
+        </div>
+        <div class="row description">
+          <h3>What can we help you with today?</h3>
+        </div>
+      </div>
+    </div>
+    <div class="row dashboard">
+      <div class="col">
+        <ion-card mode="ios">
+          <ion-card-header>
+            <ion-list lines="none">
+              <ion-item class="ion-no-padding">
+                <ion-label >
+                  <h3><strong>Approved reservation</strong></h3>
+                </ion-label>
+                <ion-badge slot="start" color="success" *ngIf="!isLoading; else elseLoadingBadge">{{totalApproved}}</ion-badge>
+              </ion-item>
+            </ion-list>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list lines="none" *ngIf="!isLoading; else elseLoadingCards">
+              <ion-item *ngIf="approvedReservation; else elseNoApprovedReservation" button detail="false" class="ion-no-padding" routerLink="/booking" [queryParams]="{status: approvedReservation.reservationStatus.name, reservationId: approvedReservation.reservationId}" replaceUrl="true">
+                <ion-label>
+                  <h3>Requried completion date:</h3>
+                  <h3><strong>{{approvedReservation.reqCompletionDate | date: 'EEEE, MMM dd, yyyy'}}</strong></h3>
+                </ion-label>
+              </ion-item>
+              <ng-template #elseNoApprovedReservation>
+                <ion-item button detail="false" class="ion-no-padding">
+                  <ion-label>
+                    <h3>No approved reservations</h3>
+                  </ion-label>
+                </ion-item>
+              </ng-template>
+            </ion-list>
+          </ion-card-content>
+          <div class="action">
+            <ion-button fill="clear" *ngIf="totalApproved > 0" [disabled]="isLoading" routerLink="/booking" [queryParams]="{status: 'Approved'}" replaceUrl="true">View all</ion-button>
+          </div>
+        </ion-card>
+      </div>
+    </div>
+    <div class="row dashboard">
+      <div class="col">
+        <ion-card mode="ios">
+          <ion-card-header>
+            <ion-list lines="none">
+              <ion-item class="ion-no-padding">
+                <ion-label >
+                  <h3><strong>Ongoing</strong></h3>
+                </ion-label>
+                <ion-badge slot="start" color="secondary" *ngIf="!isLoading; else elseLoadingBadge">{{totalProcessed}}</ion-badge>
+              </ion-item>
+            </ion-list>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list lines="none" *ngIf="!isLoading; else elseLoadingCards">
+              <ion-item *ngIf="processedReservation; else elseNoProcessedReservation" button detail="false" class="ion-no-padding" routerLink="/booking" [queryParams]="{status: processedReservation.reservationStatus.name, reservationId: processedReservation.reservationId}" replaceUrl="true">
+                <ion-label>
+                  <h3>Estimated completion date:</h3>
+                  <h3><strong>{{processedReservation.estCompletionDate | date: 'EEEE, MMM dd, yyyy'}}</strong></h3>
+                  <h3>Assigned Person:</h3>
+                  <h3><strong>{{processedReservation.staff.name}}</strong></h3>
+                </ion-label>
+              </ion-item>
+              <ng-template #elseNoProcessedReservation>
+                <ion-item button detail="false" class="ion-no-padding">
+                  <ion-label>
+                    <h3>No processed reservations</h3>
+                  </ion-label>
+                </ion-item>
+              </ng-template>
+            </ion-list>
+          </ion-card-content>
+          <div class="action">
+            <ion-button fill="clear" *ngIf="totalProcessed > 0" [disabled]="isLoading" routerLink="/booking" [queryParams]="{status: 'Processed'}" replaceUrl="true">View all</ion-button>
+          </div>
+        </ion-card>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ng-template #elseLoadingCards>
+  <ion-list lines="none">
+    <ion-item detail="false" class="ion-no-padding">
+      <ion-label style="display: flex;flex-direction: column; gap: 10px;">
+        <h2>
+          <ion-skeleton-text [animated]="true" style="height: 20px;"></ion-skeleton-text>
+        </h2>
+        <h3>
+          <ion-skeleton-text [animated]="true" style="height: 20px;"></ion-skeleton-text>
+        </h3>
+        <h3>
+          <ion-skeleton-text [animated]="true" style="height: 20px;"></ion-skeleton-text>
+        </h3>
+        <h3>
+          <ion-skeleton-text [animated]="true" style="height: 20px;"></ion-skeleton-text>
+        </h3>
+        <h3>
+          <ion-skeleton-text [animated]="true" style="height: 20px;"></ion-skeleton-text>
+        </h3>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ng-template>
+
+<ng-template #elseLoadingBadge>
+  <ion-skeleton-text [animated]="true" style="height: 20px;width: 40px;"></ion-skeleton-text>
+</ng-template>
+<ng-template #elseNoReminders>
+  <ion-list lines="none">
+    <ion-item  button detail="false" class="ion-no-padding">
+      <ion-label>
+        <h3>No reminders set</h3>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ng-template>

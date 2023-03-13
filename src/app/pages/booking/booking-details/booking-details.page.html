@@ -1,0 +1,129 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button [disabled]="isLoading" (click)="cancel()" >
+        <ion-icon name="chevron-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title style="text-align: center">Details</ion-title>
+    <div slot="end" style="width: 48px"></div>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <div *ngIf="!isLoading; else loading" class="details-container">
+    <ion-item class="item" >
+      <ion-label text-wrap>
+        <div class="item">
+          <h2 class="title"># <strong>{{details.reservationId | numberLeadZero: 5}}</strong></h2>
+        </div>
+      </ion-label>
+    </ion-item>
+    <ion-item class="item" >
+      <ion-label text-wrap>
+          <h3 class="sub">
+            <strong>
+              <ion-text
+                [color]="(details.reservationStatus.reservationStatusId === '1' || details.reservationStatus.reservationStatusId === '4' ? 'danger' : '') ||
+                (details.reservationStatus.reservationStatusId === '2' ? 'primary' : '') ||
+                (details.reservationStatus.reservationStatusId === '3' ?? 'tertiary')">
+                {{details.reservationStatus.name}}
+              </ion-text>
+            </strong>
+          </h3>
+        <h3 class="desc">Status</h3>
+      </ion-label>
+    </ion-item>
+    <ion-item class="item" >
+      <ion-icon name="alert-circle" slot="start"></ion-icon>
+      <ion-label text-wrap>
+        <h3 class="sub">{{details.reservationLevel.name}}</h3>
+      </ion-label>
+    </ion-item>
+    <ion-item class="item" >
+      <ion-icon name="today" slot="start"></ion-icon>
+      <ion-label text-wrap>
+        <h3 class="sub">{{details.reqCompletionDate | date: 'MMMM dd, YYYY'}}</h3>
+      </ion-label>
+    </ion-item>
+    <ion-item class="item" >
+      <ion-icon name="pricetag" slot="start"></ion-icon>
+      <ion-label text-wrap>
+        <h2 class="title">{{details.description}}</h2>
+        <span class="desc">{{details.description !=='' ? 'Remarks' : 'No Remarks'}}</span>
+      </ion-label>
+    </ion-item>
+    
+    <ion-item class="item" >
+      <ion-label text-wrap>
+        <h2 class="sub"><strong>Items</strong></h2>
+      </ion-label>
+    </ion-item>
+    <ion-item button class="ion-no-padding" detail="false"(click)="onAddItem()" *ngIf="details.reservationStatus.reservationStatusId === '1'">
+      <ion-icon name="add-outline"></ion-icon>
+      <ion-label><h3 class="sub">Add more item</h3></ion-label>
+    </ion-item>
+    <ion-list [lines]="details.orderItems.length > 1 ?'' : 'none'" >
+      <ion-item *ngFor="let o of details.orderItems" button detail="false" class="item">
+        <ion-label (click)="onOpenItemDetails(o)">
+          <h3 class="sub">x{{o.quantity}}&nbsp;-&nbsp;{{o.orderItemType.name}}</h3>
+          <div class="attribute">
+            <h2 class="remarks sub">{{o.remarks}}</h2>
+          </div>
+        </ion-label>
+        <ion-icon name="trash-outline" *ngIf="details.reservationStatus.reservationStatusId === '1'" (click)="details.orderItems.length > 1 ? onRemoveItem(o.orderItemId) : onCancelReservation() "></ion-icon>
+      </ion-item>
+    </ion-list>
+  </div>
+  <ng-template #loading>
+    <div class="details-container" >
+      <ion-item class="item" >
+        <ion-label text-wrap>
+            <h3 class="sub">
+              <strong>
+                <ion-text>
+                  <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+                </ion-text>
+              </strong>
+            </h3>
+          <h3 class="desc">
+            <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+          </h3>
+        </ion-label>
+      </ion-item>
+      <ion-item class="item" >
+        <ion-label text-wrap>
+          <div class="item type">
+            <h1 class="title">
+              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+            </h1>
+            <h3 class="sub">
+              <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+            </h3>
+          </div>
+        </ion-label>
+      </ion-item>
+      <ion-item class="item" >
+        <ion-icon name="today" slot="start"></ion-icon>
+        <ion-label text-wrap>
+          <h3 class="sub">
+            <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+          </h3>
+          <h3 class="sub">
+            <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+          </h3>
+        </ion-label>
+      </ion-item>
+    </div>
+  </ng-template>
+
+</ion-content>
+
+<div class="sched-controls-bottom">
+  <ion-button
+    [disabled]="isLoading"
+    *ngIf="!isLoading && details.reservationStatus.reservationStatusId === '1'"
+    color="danger"
+    expand="block"
+    fill="outline"
+    (click)="onCancelReservation()">Cancel reservation</ion-button>
+</div>

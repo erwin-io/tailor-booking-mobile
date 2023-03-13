@@ -1,0 +1,20 @@
+
+<ion-tabs (ionTabsWillChange)="onTabsWillChange($event)">
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="home">
+      <ion-icon name="home{{ active === 'home' ? '' : '-outline' }}"></ion-icon>
+      <ion-label>Home</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="booking">
+      <ion-icon name="today{{ active === 'booking' ? '' : '-outline' }}"></ion-icon>
+      <ion-label>Booking</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="notification">
+      <ion-icon name="notifications{{ active === 'notification' ? '' : '-outline' }}"></ion-icon>
+      <ion-label>Notification</ion-label>
+      <ion-badge *ngIf="totalUnreadNotification > 0">{{totalUnreadNotification}}</ion-badge>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

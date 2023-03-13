@@ -1,0 +1,128 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()" >
+        <ion-icon name="chevron-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title style="text-align: center">New Reservation</ion-title>
+    <div slot="end" style="width: 48px"></div>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" *ngIf="reservationStepper.selectedIndex === 0">
+    <ion-fab-button (click)="onAddItem()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <mat-stepper animationDuration="200" [linear]="false" #reservationStepper >
+    <mat-step [stepControl]="reservationForm">
+      <h3>What items to book?</h3>
+      <div class="item-list" *ngIf="orderItems.length > 0; else noItemAdded">
+        <ion-card mode="ios" *ngFor="let o of orderItems;let i = index" (click)="onEditItem(i, o)">
+          <ion-card-header>
+            <ion-list lines="none">
+              <ion-item class="ion-no-padding">
+                <ion-label>
+                  <h3>x{{o.quantity}}&nbsp;-&nbsp;{{o.orderItemType.name}}</h3>
+                </ion-label>
+                <ion-icon name="trash-outline" (click)="onRemoveItem(o)"></ion-icon>
+              </ion-item>
+            </ion-list>
+          </ion-card-header>
+          <ion-card-content>
+            <h3>{{o.remarks}}</h3>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      <ng-template #noItemAdded>
+        <div class="list-none">
+          <ion-icon name="document-text-outline"></ion-icon>
+          <h3>No items added yet</h3>
+        </div>
+      </ng-template>
+    </mat-step>
+    <mat-step [stepControl]="reservationForm" >      
+      <form
+        id="reservationForm"
+        [formGroup]="reservationForm"
+        (ngSubmit)="reservationForm.valid ? reservationStepper.next() : false">
+        <fieldset>
+          <div class="form-field-group">
+            <mat-label slot="start">Select required completion date</mat-label>
+            <ion-item id="open-reqCompletionDate-date-picker" [disabled]="isLoading" fill="outline" lines="none">
+              <ion-label>{{formData.reqCompletionDate | date: 'EEEE, MMMM d, y'}}</ion-label>
+            </ion-item>
+            <ion-modal trigger="open-reqCompletionDate-date-picker" [cssClass]="'bottom-end'">
+              <ng-template>
+                <ion-datetime
+                  #reqCompletionDateCtrl
+                  [min]="minDate"
+                  presentation="date"
+                  size="cover"
+                  formControlName="reqCompletionDate"
+                  [showDefaultButtons]="true"
+                ></ion-datetime>
+              </ng-template>
+            </ion-modal>
+          </div>
+          
+          <div class="form-field-group">
+            <mat-label slot="start">Important</mat-label>
+            <ion-item [disabled]="isLoading" fill="outline">
+              <ion-select slot="start" formControlName="reservationLevelId" placeholder="Select from options" >
+                <ion-select-option *ngFor="let rl of reservationLevelOptions" slot="start" [value]="rl.reservationLevelId">{{rl.name}}</ion-select-option>
+                <ion-select-option  classs="no-result-option" disabled slot="start" *ngIf="reservationLevelOptions.length === 0">No options available</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <span class="error" *ngIf="errorControls.reservationLevelId.touched && errorControls.reservationLevelId.errors && errorControls.reservationLevelId.errors.required">
+              No selected option
+            </span>
+          </div>
+          
+          <div class="form-field-group" >
+            <mat-form-field appearance="outline">
+              <mat-label>Description</mat-label>
+              <textarea
+                style="height: 200px"
+                matInput
+                type="text"
+                placeholder="Description"
+                formControlName="description"
+              ></textarea>
+            </mat-form-field>
+          </div>
+
+          <ion-item lines="none">
+            <ion-checkbox mode="ios" #termsAndConditionCheck slot="start"></ion-checkbox>
+            <ion-label>I agree to the terms and conditions</ion-label>
+          </ion-item>
+        </fieldset>
+      </form>
+    </mat-step>
+  </mat-stepper>
+</ion-content>
+<div class="sched-controls-bottom">
+  <ion-button
+    [disabled]="isLoading || orderItems.length === 0"
+    *ngIf="reservationStepper.selectedIndex === 0"
+    color="primary"
+    size="large"
+    expand="block"
+    (click)="reservationStepper.next()">Next</ion-button>
+  <ion-button
+    [disabled]="isLoading || !reservationForm.valid || !termsAndConditionCheck.checked"
+    *ngIf="reservationStepper.selectedIndex === 1"
+    color="primary"
+    size="large"
+    expand="block"
+    (click)="save()">Save</ion-button>
+  <ion-button
+    *ngIf="reservationStepper.selectedIndex > 0 && reservationStepper.selectedIndex <= 1"
+    color="primary"
+    size="large"
+    expand="block"
+    fill="outline"
+    (click)="onBack()">Back</ion-button>
+</div>

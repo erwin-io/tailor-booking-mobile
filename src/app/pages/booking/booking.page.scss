@@ -1,0 +1,46 @@
+ion-header::after {
+  background-image: none;
+  }
+  h1,h2,h3,h4,h5,h6 {
+    margin: 0!important;
+  }
+ion-toolbar {
+  // --background: #E0F2F1;
+  }
+::ng-deep .mat-tab-group {
+  height: 100%;
+  display: flex;
+  .mat-tab-labels{
+    justify-content: space-around;
+  }
+  .mat-tab-body-wrapper {
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+  }
+}
+.sched-controls-bottom {
+  z-index: 1000;
+  position: relative;
+  display: block;
+  width: 100%;
+  background: #ffffff;
+  padding: 5px 10px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  ion-button {
+    height: 45px;
+    font-size: 15px;
+  }
+}
+
+.list-title {
+  margin: 10px 25px!important;
+  display: flex;
+}
+:host {  
+  // --super-tabs-toolbar-background: #E0F2F1;
+  --super-tabs-toolbar-background: #fff;
+  --st-indicator-color: var(--ion-color-tertiary);
+  --st-base-color-active: var(--ion-color-tertiary);
+  --st-base-color-inactive: var(--ion-color-dark-tint)!important;
+}

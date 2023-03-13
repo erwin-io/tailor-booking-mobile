@@ -1,0 +1,75 @@
+
+<div class="booking-list" *ngIf="!isLoading; else elseLoading">
+  <div class="list-data" *ngIf="reservationData.length > 0; else elseNoData">
+    <ion-card mode="ios" *ngFor="let r of reservationData">
+      <ion-card-header>
+        <ion-list lines="none">
+          <ion-item class="ion-no-padding">
+            <ion-label>
+              <h2 (click)="onOpenDetails(r)">#{{r.reservationId | numberLeadZero:5}}</h2>
+            </ion-label>
+            <ion-badge slot="end" style="color: #fff" [color]="status.toLowerCase().includes('approved') ? 'success' : (status.toLowerCase().includes('pending') ? 'warning' : 'secondary')">{{status}}</ion-badge>
+          </ion-item>
+        </ion-list>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list *ngFor="let o of r.orderItems" [lines]="r.orderItems.length > 1 ?'' : 'none'" >
+          <ion-item button class="ion-no-padding" detail="false">
+            <ion-label (click)="onOpenItemDetails(r, o)">
+              <h3>x{{o.quantity}}&nbsp;-&nbsp;{{o.orderItemType.name}}</h3>
+              <div class="attribute">
+                <h2 class="remarks">{{o.remarks}}</h2>
+              </div>
+            </ion-label>
+            <ion-icon name="trash-outline" *ngIf="canEdit" (click)="r.orderItems.length > 1 ? onRemoveItem(o) : cancelReservation(r.reservationId)"></ion-icon>
+          </ion-item>
+        </ion-list>
+        <ion-list *ngIf="canEdit" lines="none" >
+          <ion-item button class="ion-no-padding" detail="false" (click)="onAddItem(r)">
+            <ion-icon name="add-outline"></ion-icon>
+            <ion-label><h3>Add more item</h3></ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+      <div class="action" >
+        <div style="display :flex; flex-direction: column;width: 100%;" (click)="onOpenDetails(r)">
+          <div *ngIf="r.reservationStatus.reservationStatusId === '1' || r.reservationStatus.reservationStatusId === '2'">
+            <h3>Required completion date: </h3>
+            <h3><strong>{{r.reqCompletionDate | date: 'MMMM dd, yyyy'}}</strong></h3>
+          </div>
+          <div *ngIf="r.reservationStatus.reservationStatusId === '3'">
+            <h3>Estimated completion date: </h3>
+            <h3><strong>{{r.estCompletionDate | date: 'MMMM dd, yyyy'}}</strong></h3>
+          </div>
+          <div *ngIf="r.reservationStatus.reservationStatusId === '3' && r.staff && r.staff.name">
+            <h3>Assigned person: </h3>
+            <h3><strong>{{r.staff.name + ' ' + r.staff.name}}</strong></h3>
+          </div>
+          <h3 *ngIf="r.reservationStatus.reservationStatusId === '1' || r.reservationStatus.reservationStatusId === '2'"><ion-text color="warning">{{r.reservationLevel.name}}</ion-text></h3>
+        </div>
+        <ion-list *ngIf="canEdit" lines="none" >
+          <ion-item button class="ion-no-padding" detail="false" (click)="cancelReservation(r.reservationId)">
+            <ion-icon name="close-outline" color="danger"></ion-icon>
+            <ion-label><h3><ion-text color="danger">Cancel</ion-text></h3></ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+    </ion-card>
+  </div>
+  <ng-template #elseNoData >
+    <div class="list-none">
+      <ion-icon name="document-text-outline"></ion-icon>
+      <h3>No {{status.toLowerCase()}} records yet</h3>
+    </div>
+  </ng-template>
+</div>
+<ng-template #elseLoading >
+  <div class="booking-list">
+    <div class="list-data">
+      <ion-card mode="ios">
+        <ion-card-content>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ng-template>

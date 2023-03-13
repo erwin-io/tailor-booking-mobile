@@ -1,0 +1,91 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button [disabled]="isLoading" (click)="cancel()" >
+        <ion-icon name="chevron-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title style="text-align: center">{{isLoading ? '' : isNew ? 'New item' : (canEdit ? 'Edit item' : 'Details')}}</ion-title>
+    <ion-buttons slot="end" *ngIf="canEdit">
+      <ion-button [disabled]="isLoading || !itemForm.valid" (click)="onSubmit()" >
+        <ion-icon name="checkmark-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <div *ngIf="!canEdit" slot="end" style="width: 48px"></div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form
+  id="itemForm"
+  [formGroup]="itemForm"
+  (ngSubmit)="onSubmit()">
+    <fieldset>
+      <ion-list *ngIf="!isLoading && ((reservation && !isNew) || (reservation && isNew))">
+        <ion-item lines="none" button detail="true" (click)="onOpenDetails()">
+          <ion-label>
+            <div>
+              <h3>
+                <strong>ID #: {{reservation ? (reservation.reservationId | numberLeadZero:5) : ''}}
+                <ion-text
+                [color]="(reservation.reservationStatus.reservationStatusId === '1' || reservation.reservationStatus.reservationStatusId === '4' ? 'danger' : '') ||
+                (reservation.reservationStatus.reservationStatusId === '2' ? 'primary' : '') ||
+                (reservation.reservationStatus.reservationStatusId === '3' ?? 'tertiary')">
+                {{reservation.reservationStatus.name}}
+              </ion-text>
+                </strong>
+              </h3>
+            </div>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <div class="form-field-group">
+        <mat-label slot="start">What type of item</mat-label>
+        <ion-item [disabled]="isLoading" fill="outline" *ngIf="canEdit">
+          <ion-select slot="start" formControlName="orderItemTypeId" placeholder="Select type">
+            <ion-select-option *ngFor="let item of orderItemTypeOption" slot="start" value="{{item.orderItemTypeId.toString()}}" >{{item.name}}</ion-select-option>
+            <!-- <ion-select-option disabled slot="start" *ngIf="!orderItemTypeOption || orderItemTypeOption.length === 0">No item type available</ion-select-option> -->
+          </ion-select>
+        </ion-item>
+        
+        <ion-radio-group *ngIf="!canEdit" >
+          <ion-item fill="outline" lines="none">
+            <ion-label>{{details.orderItemType.name}}</ion-label>
+          </ion-item>
+        </ion-radio-group>
+        <span class="error" *ngIf="errorControls.orderItemTypeId.touched && errorControls.orderItemTypeId.errors && errorControls.orderItemTypeId.errors.required">
+          Please select a type of item
+        </span>
+      </div>
+      
+      <div class="form-field-group">
+        <mat-form-field appearance="outline">
+          <mat-label>Quantity</mat-label>
+          <input
+            matInput
+            type="number"
+            [readonly]="!canEdit"
+            placeholder="Quantity"
+            formControlName="quantity"
+            autocomplete="new-quantity"
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="form-field-group" >
+        <mat-form-field appearance="outline">
+          <mat-label>Remarks</mat-label>
+          <textarea
+            style="height: 200px"
+            matInput
+            type="text"
+            placeholder="Remarks"
+            [readonly]="!canEdit"
+            formControlName="remarks"
+            autocomplete="new-quantity"
+          ></textarea>
+        </mat-form-field>
+      </div>
+    </fieldset>
+  </form>
+</ion-content>

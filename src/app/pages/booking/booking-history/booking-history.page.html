@@ -1,0 +1,57 @@
+<ion-header no-border no-shadow>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button [disabled]="isLoading" (click)="cancel()" >
+        <ion-icon name="chevron-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title style="text-align: center">History</ion-title>
+    <div slot="end" style="width: 48px"></div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher *ngIf="!isLoading" slot="fixed" (ionRefresh)="doRefresh($event)" class="refresher-custom">
+    <ion-refresher-content >
+    </ion-refresher-content>
+  </ion-refresher>
+  <div *ngIf="!isLoading; else elseLoading">
+    <ion-list *ngIf="reservation.length > 0; else elseNoData">
+      <ion-item *ngFor="let r of reservation"  button detail="true" (click)="onOpenDetails(r)">
+        <ion-label>
+          <div>
+            <h3>
+              <strong>ID #: {{r.reservationId | numberLeadZero:5}}
+              <ion-text
+              [color]="(r.reservationStatus.reservationStatusId === '1' || r.reservationStatus.reservationStatusId === '4' ? 'danger' : '') ||
+              (r.reservationStatus.reservationStatusId === '2' ? 'primary' : '') ||
+              (r.reservationStatus.reservationStatusId === '3' ?? 'tertiary')">
+              {{r.reservationStatus.name}}
+            </ion-text>
+              </strong>
+            </h3>
+          </div>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+  <ng-template #elseLoading >
+    <ion-list>
+      <ion-item >
+        <ion-label>
+          <div>
+            <h3 style="width: 50%;" class="title"><ion-skeleton-text [animated]="true"></ion-skeleton-text></h3>
+            <p><ion-skeleton-text [animated]="true"></ion-skeleton-text></p>
+            <p style="width: 40%;"><ion-skeleton-text [animated]="true"></ion-skeleton-text></p>
+          </div>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </ng-template>
+  <ng-template #elseNoData >
+    <div class="no-records">
+      <ion-icon style="font-size: 4em;" name="search-outline"></ion-icon>
+      <h3 class="text">No recent reservations to show</h3>
+    </div>
+  </ng-template>
+</ion-content>
