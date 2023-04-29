@@ -66,7 +66,6 @@ export class ProfileSettingsPage implements OnInit {
       birthDate : [new Date(this.user.birthDate).toISOString(), Validators.required],
       genderId : [this.user.gender.genderId, Validators.required]
     });
-    console.log(this.formData);
   }
 
   async onSubmit() {

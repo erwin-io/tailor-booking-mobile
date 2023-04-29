@@ -88,4 +88,11 @@
       </div>
     </fieldset>
   </form>
+  <ion-list lines="full">
+    <ion-item button detail="true" (click)="openAttachment()">
+      <ion-label>Attachments({{orderItemAttachments ? orderItemAttachments.length : 0}})</ion-label>
+      <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
+    </ion-item>
+
+  </ion-list>
 </ion-content>

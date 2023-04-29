@@ -46,7 +46,6 @@ export class VerifyOtpPage implements OnInit {
   ngOnInit() {
     if(window.history.state && window.history.state.data && window.history.state.data.userId){
       this.userId = window.history.state.data.userId;
-      console.log(window.history.state.data);
     }else {
       this.router.navigate(['/login'], { replaceUrl: true });
     }
@@ -60,7 +59,6 @@ export class VerifyOtpPage implements OnInit {
       return;
     }
     const params = this.formData;
-    console.log(params);
     try{
       this.isSubmitting = true;
       await this.pageLoaderService.open('Verifying please wait...');
@@ -88,7 +86,6 @@ export class VerifyOtpPage implements OnInit {
           }
         }, async (err) => {
           await this.pageLoaderService.close();
-          console.log(err);
           this.isSubmitting = false;
           await this.presentAlert({
             header: 'Try again!',
@@ -99,7 +96,6 @@ export class VerifyOtpPage implements OnInit {
         });
     } catch (e){
       await this.pageLoaderService.close();
-      console.log(e);
       this.isSubmitting = false;
       await this.presentAlert({
         header: 'Try again!',

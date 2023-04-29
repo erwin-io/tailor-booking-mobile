@@ -62,14 +62,10 @@ export class FcmService {
     PushNotifications.addListener(
       'registration',
       (token: PushNotificationToken) => {
-        console.log('registerd! token', token.value);
-        console.log('saving token to user', this.currentUser.userId);
         this.userService.updateFirebaseToken({
           userId: this.currentUser.userId,
           firebaseToken: token.value
         }).subscribe((res)=> {
-          console.log('saved! to user', this.currentUser.userId);
-          console.log(res);
         }, (err)=>{console.log('error saving token');console.log(err);});
       }
     );

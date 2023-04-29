@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ViewEncapsulation } from '@angular/core';
 import { ModalController, Platform } from '@ionic/angular';
 import { Files } from 'src/app/core/model/files.model';
 
@@ -6,6 +6,7 @@ import { Files } from 'src/app/core/model/files.model';
   selector: 'app-image-viewer',
   templateUrl: './image-viewer.page.html',
   styleUrls: ['./image-viewer.page.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ImageViewerPage implements OnInit {
   file: Files;
@@ -26,4 +27,5 @@ export class ImageViewerPage implements OnInit {
   close() {
     this.modalCtrl.dismiss();
   }
+
 }

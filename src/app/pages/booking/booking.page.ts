@@ -83,7 +83,6 @@ export class BookingPage implements OnInit, AfterViewInit {
   }
 
   async ionViewWillEnter(){
-    console.log('visited');
       
     const status = this.route.snapshot.queryParamMap.get('status');
     const toOpenReseravtionId = this.route.snapshot.queryParamMap.get('reservationId');

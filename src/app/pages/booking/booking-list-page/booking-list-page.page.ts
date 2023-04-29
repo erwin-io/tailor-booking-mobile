@@ -34,7 +34,6 @@ export class BookingListPagePage implements OnInit {
     private pageLoaderService: PageLoaderService,
     private actionSheetController: ActionSheetController) {
     this.currentUser = this.storageService.getLoginUser();
-    console.log(this.status)
   }
 
   get isAuthenticated() {
@@ -64,7 +63,6 @@ export class BookingListPagePage implements OnInit {
             x.orderItems = x.orderItems.filter(x=> x.entityStatus.entityStatusId === EntityStatusEnum.ACTIVE.toString())
             return x;
           });
-          console.log(res.data);
           this.isLoading = false;
         }
         else{

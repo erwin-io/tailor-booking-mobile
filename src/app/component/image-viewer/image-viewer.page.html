@@ -4,6 +4,6 @@
 </button>
 <div class="image-background">
   <div class="image-holder">
-    <img [src]="file ? file.url : ''" [style.display]="loaded ? 'block' : 'none'" (error)="profilePicErrorHandler($event)" (load)="loaded = true">
+      <img [src]="file ? file.url : ''" [style.display]="loaded ? 'block' : 'none'" (error)="profilePicErrorHandler($event)" (load)="loaded = true">
   </div>
 </div>

@@ -28,7 +28,6 @@ export class AppComponent implements OnInit {
 
     @Optional() private routerOutlet?: IonRouterOutlet
   ) {
-    console.log('environment.apiBaseUrl ', environment.apiBaseUrl);
     StatusBar.setOverlaysWebView({ overlay: false });
     StatusBar.setStyle({ style: Style.Light });
     StatusBar.show();

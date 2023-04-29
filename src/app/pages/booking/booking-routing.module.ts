@@ -27,7 +27,11 @@ const routes: Routes = [
   {
     path: 'booking-item-add',
     loadChildren: () => import('./booking-item-add/booking-item-add.module').then( m => m.BookingItemAddPageModule)
+  },  {
+    path: 'booking-item-attachments',
+    loadChildren: () => import('./booking-item-attachments/booking-item-attachments.module').then( m => m.BookingItemAttachmentsPageModule)
   }
+
 
 
 

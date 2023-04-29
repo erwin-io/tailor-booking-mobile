@@ -104,7 +104,6 @@ export class PasswordAndSecurityPage implements OnInit {
       this.isSubmitting = true;
       this.userService.changePassword(params).subscribe(
         async (res) => {
-          console.log(res);
           if (res.success) {
             await this.pageLoaderService.close();
             await this.presentAlert({

@@ -76,6 +76,7 @@ export class NewBookingPage implements OnInit {
           orderItemTypeId: x.orderItemType.orderItemTypeId,
           remarks: x.remarks,
           quantity: x.quantity,
+          orderItemAttachments: x.orderItemAttachments
         }
       })
     };

@@ -402,6 +402,9 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
 
+ngx-ionic-image-viewer
+MIT
+
 relative-time-format
 MIT
 (The MIT License)
