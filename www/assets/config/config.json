@@ -54,7 +54,9 @@
       "getById": "order-item/",
       "create": "order-item/",
       "update": "order-item/",
-      "delete": "order-item/"
+      "delete": "order-item/",
+      "addAttachmentFile": "order-item/addAttachmentFile",
+      "removeAttachmentFile": "order-item/removeAttachmentFile/"
     },
     "orderItemType": {
       "getAll": "order-item-type"

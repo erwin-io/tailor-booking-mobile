@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()" >
+        <ion-icon name="chevron-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title style="text-align: center">Attachments</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="isNew && orderItemAttachments.length > 0" (click)="done()" >
+        <ion-icon name="checkmark-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <div *ngIf="!isNew" slot="end" style="width: 48px"></div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="onAddPhoto()">
+      <ion-icon name="image-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <div class="photos" *ngIf="orderItemAttachments.length > 0; else elseNoRecords">
+    <ion-avatar *ngFor="let file of orderItemAttachments">
+      <ion-fab-button size="small" class="remove-button" color="danger" (click)="onRemovePhoto(file)">
+        <ion-icon name="close"></ion-icon>
+      </ion-fab-button>
+      <ion-img-viewer
+        scheme="dark"
+        [src]="isNew || file.isNew ? (file ? file.url : '') : (file.file ? file.file.url: '')"
+        (error)="imageErrorHandler($event)"
+      >
+      </ion-img-viewer>
+    </ion-avatar>
+  </div>
+  <ng-template #elseNoRecords>
+    <div class="no-records">
+      <ion-icon style="font-size: 4em;" name="images-outline"></ion-icon>
+      <h3 class="text">No attachments to show</h3>
+    </div>
+  </ng-template>
+</ion-content>

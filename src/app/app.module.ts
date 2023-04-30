@@ -20,6 +20,8 @@ import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 import { ImageViewerPageModule } from './component/image-viewer/image-viewer.module';
 import { SuperTabsModule } from '@ionic-super-tabs/angular';
+import { NgxIonicImageViewerModule } from 'ngx-ionic-image-viewer';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,6 +38,7 @@ import { SuperTabsModule } from '@ionic-super-tabs/angular';
     DirectiveModule,
     ImageViewerPageModule,
     SuperTabsModule.forRoot(),
+    NgxIonicImageViewerModule
   ],
   providers: [
     InAppBrowser,

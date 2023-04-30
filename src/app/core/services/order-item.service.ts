@@ -78,9 +78,33 @@ export class OrderItemService implements IServices {
       );
   }
 
+  addAttachmentFile(data: any): Observable<ApiResponse<any>> {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl +
+          this.appconfig.config.apiEndPoints.orderItem.addAttachmentFile,
+        data
+      )
+      .pipe(
+        tap((_) => this.log('order item')),
+        catchError(this.handleError('order item', []))
+      );
+  }
+
+  removeAttachmentFile(orderItemAttachmentId: string): Observable<ApiResponse<any>> {
+    return this.http
+      .delete<any>(
+        environment.apiBaseUrl +
+          this.appconfig.config.apiEndPoints.orderItem.removeAttachmentFile + orderItemAttachmentId
+      )
+      .pipe(
+        tap((_) => this.log('rder it')),
+        catchError(this.handleError('rder it', []))
+      );
+  }
+
   handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      console.log(error);
       this.log(
         `${operation} failed: ${
           Array.isArray(error.error.message)

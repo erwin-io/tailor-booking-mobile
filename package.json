@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "ionic_serve": "ionic serve --proxy-config proxy.conf.json",
+    "ionic_serve": "ionic serve --address 127.0.0.1 --proxy-config proxy.conf.json",
     "ionic_lab_serve": "ionic serve --lab",
     "ionic_build_prod": "ionic build --prod && npx cap sync android",
     "build": "ng build",
@@ -16,7 +16,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^14.0.0",
+    "@angular/animations": "^14.3.0",
     "@angular/cdk": "^14.2.4",
     "@angular/common": "^14.0.0",
     "@angular/core": "^14.0.0",
@@ -56,6 +56,7 @@
     "ionicons": "^6.0.3",
     "javascript-time-ago": "^2.5.9",
     "moment": "^2.29.4",
+    "ngx-ionic-image-viewer": "^0.7.5",
     "ngx-socket-io": "^4.4.0",
     "object-to-formdata": "^4.4.2",
     "peerjs": "^1.4.7",

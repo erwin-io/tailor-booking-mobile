@@ -79,7 +79,6 @@ export class TokenInterceptor implements HttpInterceptor {
       refreshToken !== 'null'
     ) {
       if(this.refreshRequest > 1) {
-          console.log('logout from interceptor');
           this.handleLogout();
           return next.handle(request);
       }
@@ -103,7 +102,6 @@ export class TokenInterceptor implements HttpInterceptor {
         }),
       );
     } else {
-      console.log('logout from interceptor');
       this.handleLogout();
     }
   }

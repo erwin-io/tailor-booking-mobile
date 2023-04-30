@@ -57,7 +57,6 @@ export class RegisterPage implements OnInit {
   };
 
   async onFormSubmit(form: NgForm) {
-    console.log(form);
     if(!this.registerForm.valid){
       return;
     }

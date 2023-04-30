@@ -1,0 +1,38 @@
+
+ion-header::after {
+    background-image: none;
+  }
+  h1,h2,h3,h4,h5,h6,
+  p,span,label {
+    margin: 0!important;
+  }
+
+  .photos {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+    ion-avatar {
+      display: flex;
+      height: auto;
+      width: 100%;
+      position: relative;
+      min-height: 40px;
+      ion-img-viewer {
+        display: flex !important;
+        flex-grow: 1 !important;
+        height: 100%;
+        width: 100% !important;
+        justify-content: center;
+        img {
+          width: 100%!important;
+          object-fit: contain!important;
+        }
+      }
+      .remove-button {
+        position: absolute;
+        right: -15px;
+        top: -15px;
+      }
+    }
+  }

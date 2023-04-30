@@ -13,6 +13,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { StorageService } from 'src/app/core/storage/storage.service';
 import { PageLoaderService } from 'src/app/core/ui-service/page-loader.service';
 import { BookingDetailsPage } from '../booking-details/booking-details.page';
+import { BookingItemAttachmentsPage } from '../booking-item-attachments/booking-item-attachments.page';
 
 @Component({
   selector: 'app-booking-item-add',
@@ -31,6 +32,8 @@ export class BookingItemAddPage implements OnInit {
   reservation: Reservation;
   orderItemTypeOption: OrderItemType[] = [];
   itemForm: FormGroup;
+  orderItemAttachments: any[] = [];
+
 
   constructor(private modalCtrl: ModalController,
     private alertController: AlertController,
@@ -55,6 +58,7 @@ export class BookingItemAddPage implements OnInit {
       ...this.itemForm.value,
       orderItemId: this.isNew ? null : this.details.orderItemId,
       reservationId: this.isNew ? !this.reservation ? null : this.reservation.reservationId : !this.reservation ? null : this.reservation.reservationId,
+      orderItemAttachments: this.orderItemAttachments,
     };
   }
 
@@ -81,7 +85,6 @@ export class BookingItemAddPage implements OnInit {
           this.itemForm.controls['remarks'].setValue(this.details.remarks);
         }
         else if(this.details) {
-          console.log(this.details);
           this.itemForm.controls['orderItemTypeId'].setValue(this.details.orderItemType.orderItemTypeId);
           this.itemForm.controls['quantity'].setValue(this.details.quantity);
           this.itemForm.controls['remarks'].setValue(this.details.remarks);
@@ -105,11 +108,10 @@ export class BookingItemAddPage implements OnInit {
       this.orderItemService.getById(orderItemId)
       .subscribe(async res => {
         if(res.success){
-          console.log(this.details);
           this.details = {...res.data, ...this.details};
-          console.log(this.details);
           this.isLoading = false;
           this.itemForm.controls['orderItemTypeId'].setValue(res.data.orderItemType.orderItemTypeId);
+          this.orderItemAttachments = this.details.orderItemAttachments;
         }
         else{
           await this.presentAlert({
@@ -181,6 +183,7 @@ export class BookingItemAddPage implements OnInit {
           data.quantity = this.formData.quantity;
           data.orderItemType = this.orderItemTypeOption.filter(x=>x.orderItemTypeId === this.formData.orderItemTypeId)[0];
           data.remarks = this.formData.remarks;
+          data.orderItemAttachments = this.formData.orderItemAttachments;
           this.modal.dismiss({success: true, data }, 'confirm');
         }
       }
@@ -290,6 +293,27 @@ export class BookingItemAddPage implements OnInit {
     });
     modal.present();
     await modal.onWillDismiss();
+  }
+  
+
+  async openAttachment() {
+    const modal = await this.modalCtrl.create({
+      component: BookingItemAttachmentsPage,
+      cssClass: 'modal-fullscreen',
+      componentProps: { 
+        isNew: this.isNew, 
+        currentUser: this.currentUser, 
+        orderItemAttachments: this.orderItemAttachments && this.orderItemAttachments.length > 0 ? this.orderItemAttachments.sort((a,b) => Number(b.orderItemAttachmentId) - Number(a.orderItemAttachmentId)) : [],
+        orderItemId: this.details && this.details.orderItemId ? this.details.orderItemId : null
+      },
+    });
+    modal.present();
+    
+    await modal.onWillDismiss().then(async (res) => {
+      if(res.data) {
+        this.orderItemAttachments = res.data;
+      }
+    });
   }
 
   cancel() {
