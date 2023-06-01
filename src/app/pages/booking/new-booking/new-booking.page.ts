@@ -210,11 +210,11 @@ export class NewBookingPage implements OnInit {
     });
   }
   
-  async onEditItem(index, item) {
+  async onEditItem(index, item: OrderItem) {
     const modal = await this.modalCtrl.create({
       component: BookingItemAddPage,
       cssClass: 'modal-fullscreen',
-      componentProps: { details: item, canEdit: true, currentUser: this.currentUser },
+      componentProps: { details: item, orderItemAttachments: item.orderItemAttachments, canEdit: true, currentUser: this.currentUser },
     });
     modal.present();
     

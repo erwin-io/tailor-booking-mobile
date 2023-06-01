@@ -26,7 +26,7 @@
           <ion-label>
             <div>
               <h3>
-                <strong>ID #: {{reservation ? (reservation.reservationId | numberLeadZero:5) : ''}}
+                <strong>ID {{reservation ? (reservation.reservationCode) : ''}}
                 <ion-text
                 [color]="(reservation.reservationStatus.reservationStatusId === '1' || reservation.reservationStatus.reservationStatusId === '4' ? 'danger' : '') ||
                 (reservation.reservationStatus.reservationStatusId === '2' ? 'primary' : '') ||

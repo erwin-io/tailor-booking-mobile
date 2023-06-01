@@ -6,7 +6,7 @@
         <ion-list lines="none">
           <ion-item class="ion-no-padding">
             <ion-label>
-              <h2 (click)="onOpenDetails(r)">#{{r.reservationId | numberLeadZero:5}}</h2>
+              <h2 (click)="onOpenDetails(r)">{{r.reservationCode}}</h2>
             </ion-label>
             <ion-badge slot="end" style="color: #fff" [color]="status.toLowerCase().includes('approved') ? 'success' : (status.toLowerCase().includes('pending') ? 'warning' : 'secondary')">{{status}}</ion-badge>
           </ion-item>

@@ -50,7 +50,7 @@ export class BookingItemAddPage implements OnInit {
         this.cancel();
       });
   }
-  get isNew(){ return !this.details || !this.details.orderItemId && this.details.orderItemId === "" }
+  get isNew(){ return !this.details || !this.details.orderItemId || this.details.orderItemId === "" }
 
 
   get formData(){
