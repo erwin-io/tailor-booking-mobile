@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation } from '@an
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { DomSanitizer } from '@angular/platform-browser';
-import { IonModal, IonDatetime, ModalController, AlertController, ActionSheetController, Platform } from '@ionic/angular';
+import { IonModal, IonDatetime, ModalController, AlertController, ActionSheetController, Platform, CheckboxCustomEvent } from '@ionic/angular';
 import * as moment from 'moment';
 import { forkJoin, Subscription } from 'rxjs';
 import { LoginResult } from 'src/app/core/model/loginresult.model';
@@ -39,6 +39,9 @@ export class NewBookingPage implements OnInit {
   availableTimeSlot = [];
   orderItems: OrderItem[] = [];
   reservationLevelOptions: ReservationLevel[] = [];
+  canDismiss = false;
+
+  presentingElement = null;
 
   timeSlotConfig: any = {
     start: '08:00',
@@ -59,19 +62,19 @@ export class NewBookingPage implements OnInit {
     private appconfig: AppConfigService,
     private platform: Platform,
     public sanitizer: DomSanitizer) {
-      this.timeSlotConfig.notAvailableHours = this.appconfig.config.reservationConfig.timeSlotNotAvailableHours;
-      this.timeSlotConfig.dayOfWeekNotAvailable = this.appconfig.config.reservationConfig.dayOfWeekNotAvailable;
-      this.platform.backButton.subscribeWithPriority(-1, () => {
-        this.cancel();
-      });
-      this.initFilter();
+    this.timeSlotConfig.notAvailableHours = this.appconfig.config.reservationConfig.timeSlotNotAvailableHours;
+    this.timeSlotConfig.dayOfWeekNotAvailable = this.appconfig.config.reservationConfig.dayOfWeekNotAvailable;
+    this.platform.backButton.subscribeWithPriority(-1, () => {
+      this.cancel();
+    });
+    this.initFilter();
   }
 
-  get formData(){
+  get formData() {
     return {
       ...this.reservationForm.value,
       customerId: this.currentUser.customerId,
-      orderItems: this.orderItems.map(x=> {
+      orderItems: this.orderItems.map(x => {
         return {
           orderItemTypeId: x.orderItemType.orderItemTypeId,
           remarks: x.remarks,
@@ -87,24 +90,24 @@ export class NewBookingPage implements OnInit {
   }
 
 
-  initFilter(){
+  initFilter() {
     this.isLoadingFilter = true;
     forkJoin([
-  ]).subscribe(
+    ]).subscribe(
       ([]) => {
-          // do things
+        // do things
       },
       (error) => console.error(error),
       () => {
         this.isLoadingFilter = false;
-        this.reservationLevelOptions = this.appconfig.config.lookup.reservationLevel.map(x=> {
+        this.reservationLevelOptions = this.appconfig.config.lookup.reservationLevel.map(x => {
           return {
             reservationLevelId: x.reservationLevelId,
             name: x.name
           };
         });
       }
-  )
+    )
   }
 
   ngOnInit() {
@@ -115,15 +118,17 @@ export class NewBookingPage implements OnInit {
       reservationLevelId: [null, Validators.required],
       description: [null, Validators.required]
     });
-    
+
     this.allowToClose = true;
 
     this.subscription = this.platform.backButton.subscribeWithPriority(9999, (e) => {
-      if(this.modal.canDismiss){
+      if (this.modal.canDismiss) {
         this.cancel();
       }
       this.pageLoaderService.close();
     });
+
+    this.presentingElement = document.querySelector('.ion-page');
   }
 
   ionViewWillLeave() {
@@ -132,7 +137,7 @@ export class NewBookingPage implements OnInit {
 
   onSelectFocus(control: any, value: any) {
     console.log('click');
-    setTimeout(()=>{
+    setTimeout(() => {
       control.setValue(value);
     }, 1000);
   }
@@ -142,17 +147,22 @@ export class NewBookingPage implements OnInit {
   }
 
   cancel() {
-    if(this.reservationStepper.selectedIndex !== 0) {
+    if (this.reservationStepper.selectedIndex !== 0) {
       this.onBack();
-    }else {
+    } else {
       this.modal.canDismiss = true;
       this.modalCtrl.dismiss(null, 'cancel');
     }
   }
 
-  async save(){
+  onTermsChanged(event: Event) {
+    const ev = event as CheckboxCustomEvent;
+    this.canDismiss = ev.detail.checked;
+  }
+
+  async save() {
     const params = this.formData;
-    try{
+    try {
       await this.pageLoaderService.open('Booking reservation...');
       this.isSubmitting = true;
       this.reservationService.createReservation(params)
@@ -164,7 +174,7 @@ export class NewBookingPage implements OnInit {
             });
             this.isSubmitting = false;
             this.modal.canDismiss = true;
-            this.modal.dismiss({success: true, data: res.data}, 'confirm');
+            this.modal.dismiss({ success: true, data: res.data }, 'confirm');
             await this.pageLoaderService.close();
           } else {
             await this.pageLoaderService.close();
@@ -184,7 +194,7 @@ export class NewBookingPage implements OnInit {
             buttons: ['OK']
           });
         });
-    } catch (e){
+    } catch (e) {
       await this.pageLoaderService.close();
       this.isSubmitting = false;
       await this.presentAlert({
@@ -202,31 +212,31 @@ export class NewBookingPage implements OnInit {
       componentProps: { canEdit: true, currentUser: this.currentUser },
     });
     modal.present();
-    
+
     await modal.onWillDismiss().then(async (res) => {
-      if(res.data) {
+      if (res.data) {
         this.orderItems.push(res.data.data);
       }
     });
   }
-  
-  async onEditItem(index, item: OrderItem) {
+
+  async onEditItem(index, item) {
     const modal = await this.modalCtrl.create({
       component: BookingItemAddPage,
       cssClass: 'modal-fullscreen',
-      componentProps: { details: item, orderItemAttachments: item.orderItemAttachments, canEdit: true, currentUser: this.currentUser },
+      componentProps: { details: item, canEdit: true, currentUser: this.currentUser },
     });
     modal.present();
-    
+
     await modal.onWillDismiss().then(async (res) => {
-      if(res.data) {
+      if (res.data) {
         this.orderItems[index] = res.data.data
       }
     });
   }
 
-  async onRemoveItem(o:OrderItem) {
-    this.orderItems = this.orderItems.filter(x=> x.orderItemId !== o.orderItemId);
+  async onRemoveItem(o: OrderItem) {
+    this.orderItems = this.orderItems.filter(x => x.orderItemId !== o.orderItemId);
   }
 
   async presentAlert(options: any) {
