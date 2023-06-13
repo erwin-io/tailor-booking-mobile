@@ -30,7 +30,8 @@
       "register":"auth/register/customer",
       "findByUsername": "auth/findByUsername/",
       "refreshToken": "auth/refresh-token",
-      "verifyOtp": "auth/verifyOtp"
+      "verifyOtp": "auth/verifyOtp",
+      "createUserVerification": "auth/createUserVerification"
     },
     "user": {
       "getById": "users/",

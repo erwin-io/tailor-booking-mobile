@@ -67,58 +67,11 @@ export class RegisterPage implements OnInit {
     try{
       this.isSubmitting = true;
       await this.pageLoaderService.open('Processing please wait...');
-      this.authService.register(form)
-        .subscribe(async res => {
-          if (res.success) {
-            console.log(res.data);
-            await this.presentAlert({
-              header: 'Saved!',
-              buttons: [
-                {
-                  text: 'Ok',
-                  handler: async ()=> {
-                    await this.pageLoaderService.close();
-                  },
-                },
-              ]
-            }).then(async () =>{
-              if(this.appconfig.config.auth.requireOTP === true) {
-                const navigationExtras: NavigationExtras = {
-                  state: {
-                    data: {
-                      userId: res.data.user.userId
-                    }
-                  }
-                };
-                this.router.navigate(['verify-otp'], navigationExtras);
-                await this.pageLoaderService.close();
-              }else {
-                this.router.navigate(['/login'], { replaceUrl: true });
-                await this.pageLoaderService.close();
-              }
-              this.isSubmitting = false;
-            });
-            await this.pageLoaderService.close();
-          } else {
-            this.isSubmitting = false;
-            await this.presentAlert({
-              header: 'Try again!',
-              message: Array.isArray(res.message) ? res.message[0] : res.message,
-              buttons:  [
-                {
-                  text: 'Ok',
-                  handler: async ()=> {
-                    await this.pageLoaderService.close();
-                  },
-                },
-              ]
-            });
-          }
-        }, async (err) => {
-          this.isSubmitting = false;
+      this.authService.createUserVerification(params)
+      .subscribe(async res => {
+        if (res.success) {
           await this.presentAlert({
-            header: 'Try again!',
-            message: Array.isArray(err.message) ? err.message[0] : err.message,
+            header: 'Saved!',
             buttons: [
               {
                 text: 'Ok',
@@ -127,8 +80,51 @@ export class RegisterPage implements OnInit {
                 },
               },
             ]
+          }).then(async () =>{
+            this.isSubmitting = false;
           });
+          await this.pageLoaderService.close();
+          
+          const navigationExtras: NavigationExtras = {
+            state: {
+              data: JSON.stringify(params)
+            }
+          };
+          this.router.navigate(['verify-otp'], navigationExtras);
+          await this.pageLoaderService.close();
+          
+          this.isSubmitting = false;
+        } else {
+          this.isSubmitting = false;
+          await this.presentAlert({
+            header: 'Try again!',
+            message: Array.isArray(res.message) ? res.message[0] : res.message,
+            buttons:  [
+              {
+                text: 'Ok',
+                handler: async ()=> {
+                  await this.pageLoaderService.close();
+                },
+              },
+            ]
+          });
+        }
+      }, async (err) => {
+        this.isSubmitting = false;
+        await this.presentAlert({
+          header: 'Try again!',
+          message: Array.isArray(err.message) ? err.message[0] : err.message,
+          buttons: [
+            {
+              text: 'Ok',
+              handler: async ()=> {
+                await this.pageLoaderService.close();
+              },
+            },
+          ]
         });
+      });
+      
     } catch (e){
       await this.pageLoaderService.close();
       this.isSubmitting = false;

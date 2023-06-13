@@ -20,6 +20,7 @@ export class VerifyOtpPage implements OnInit {
   verifyOtpForm: FormGroup;
   // sessionTimeout;
   userId: string;
+  registerData;
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -39,13 +40,13 @@ export class VerifyOtpPage implements OnInit {
   get formData() {
     return {
       ...this.verifyOtpForm.value,
-      userId: this.userId,
+      ...this.registerData,
     };
   }
 
   ngOnInit() {
-    if(window.history.state && window.history.state.data && window.history.state.data.userId){
-      this.userId = window.history.state.data.userId;
+    if(window.history.state && window.history.state.data){
+      this.registerData = JSON.parse(window.history.state.data);
     }else {
       this.router.navigate(['/login'], { replaceUrl: true });
     }
@@ -62,17 +63,19 @@ export class VerifyOtpPage implements OnInit {
     try{
       this.isSubmitting = true;
       await this.pageLoaderService.open('Verifying please wait...');
-      this.authService.verifyOtp(params)
-        .subscribe(async res => {
+      this.authService.register(params)
+        .subscribe(async regRes => {
           await this.pageLoaderService.close();
-          if (res.success) {
-            this.storageService.saveRefreshToken(res.data.accessToken);
-            this.storageService.saveAccessToken(res.data.refreshToken);
-            this.storageService.saveTotalUnreadNotif(res.data.totalUnreadNotif);
+          if (regRes.success) {
+            const logRes = await this.authService.login(params).toPromise();
+            
+            this.storageService.saveRefreshToken(logRes.data.accessToken);
+            this.storageService.saveAccessToken(logRes.data.refreshToken);
+            this.storageService.saveTotalUnreadNotif(logRes.data.totalUnreadNotif);
             // const today = new Date();
             // today.setTime(today.getTime() + this.sessionTimeout * 1000);
             // this.storageService.saveSessionExpiredDate(today);
-            const userData: LoginResult = res.data;
+            const userData: LoginResult = logRes.data;
             this.storageService.saveLoginUser(userData);
             this.router.navigate(['/'], { replaceUrl: true });
             this.isSubmitting = false;
@@ -80,7 +83,7 @@ export class VerifyOtpPage implements OnInit {
             this.isSubmitting = false;
             await this.presentAlert({
               header: 'Try again!',
-              message: Array.isArray(res.message) ? res.message[0] : res.message,
+              message: Array.isArray(regRes.message) ? regRes.message[0] : regRes.message,
               buttons: ['OK']
             });
           }

@@ -63,28 +63,15 @@ export class LoginPage implements OnInit {
       this.authService.login(params)
         .subscribe(async res => {
           if (res.success) {
-            if(this.appconfig.config.auth.requireOTP === true && !res.data.isVerified) {
-              const navigationExtras: NavigationExtras = {
-                state: {
-                  data: {
-                    userId: res.data.userId
-                  }
-                },
-                replaceUrl: true
-              };
-              this.router.navigate(['/verify-otp'], navigationExtras);
-              await this.pageLoaderService.close();
-            } else {
-              this.storageService.saveRefreshToken(res.data.accessToken);
-              this.storageService.saveAccessToken(res.data.refreshToken);
-              this.storageService.saveTotalUnreadNotif(res.data.totalUnreadNotif);
-              const userData: LoginResult = res.data;
-              this.storageService.saveLoginUser(userData);
-              this.fcmService.init();
-              this.router.navigate(['/'], { replaceUrl: true });
-              this.isSubmitting = false;
-              await this.pageLoaderService.close();
-            }
+            this.storageService.saveRefreshToken(res.data.accessToken);
+            this.storageService.saveAccessToken(res.data.refreshToken);
+            this.storageService.saveTotalUnreadNotif(res.data.totalUnreadNotif);
+            const userData: LoginResult = res.data;
+            this.storageService.saveLoginUser(userData);
+            this.fcmService.init();
+            this.router.navigate(['/'], { replaceUrl: true });
+            this.isSubmitting = false;
+            await this.pageLoaderService.close();
           } else {
             await this.pageLoaderService.close();
             this.isSubmitting = false;
@@ -102,7 +89,6 @@ export class LoginPage implements OnInit {
             });
           }
         }, async (err) => {
-          console.log(err);
           this.isSubmitting = false;
           await this.pageLoaderService.close();
           await this.presentAlert({
@@ -120,7 +106,6 @@ export class LoginPage implements OnInit {
           });
         });
     } catch (e){
-      console.log(e);
       await this.pageLoaderService.close();
       this.isSubmitting = false;
       await this.presentAlert({

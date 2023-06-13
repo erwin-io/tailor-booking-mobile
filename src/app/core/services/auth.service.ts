@@ -58,6 +58,14 @@ export class AuthService implements IServices {
     );
   }
 
+  createUserVerification(data: any): Observable<ApiResponse<Customer>> {
+    return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.auth.createUserVerification, data)
+    .pipe(
+      tap(_ => this.log('register')),
+      catchError(this.handleError('register', []))
+    );
+  }
+
   register(data: any): Observable<ApiResponse<Customer>> {
     return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.auth.register, data)
     .pipe(
