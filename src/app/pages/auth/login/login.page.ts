@@ -69,9 +69,11 @@ export class LoginPage implements OnInit {
                   data: {
                     userId: res.data.userId
                   }
-                }
+                },
+                replaceUrl: true
               };
               this.router.navigate(['/verify-otp'], navigationExtras);
+              await this.pageLoaderService.close();
             } else {
               this.storageService.saveRefreshToken(res.data.accessToken);
               this.storageService.saveAccessToken(res.data.refreshToken);
@@ -89,7 +91,14 @@ export class LoginPage implements OnInit {
             await this.presentAlert({
               header: 'Try again!',
               message: Array.isArray(res.message) ? res.message[0] : res.message,
-              buttons: ['OK']
+              buttons: [
+                {
+                  text: 'Ok',
+                  handler: async ()=> {
+                    await this.pageLoaderService.close();
+                  },
+                },
+              ]
             });
           }
         }, async (err) => {
@@ -100,7 +109,14 @@ export class LoginPage implements OnInit {
             header: 'Try again!',
             subHeader: '',
             message: Array.isArray(err.message) ? err.message[0] : err.message,
-            buttons: ['OK']
+            buttons: [
+              {
+                text: 'Ok',
+                handler: async ()=> {
+                  await this.pageLoaderService.close();
+                },
+              },
+            ]
           });
         });
     } catch (e){
@@ -111,7 +127,14 @@ export class LoginPage implements OnInit {
         header: 'Try again!',
         subHeader: '',
         message: Array.isArray(e.message) ? e.message[0] : e.message,
-        buttons: ['OK']
+        buttons: [
+          {
+            text: 'Ok',
+            handler: async ()=> {
+              await this.pageLoaderService.close();
+            },
+          },
+        ]
       });
     }
   }

@@ -81,8 +81,8 @@ export class UserService implements IServices {
     );
   }
 
-  udpdateCustomer(data: any): Observable<ApiResponse<Customer>> {
-    return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.udpdateCustomer, data)
+  updateCustomer(data: any): Observable<ApiResponse<Customer>> {
+    return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.updateCustomer, data)
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))

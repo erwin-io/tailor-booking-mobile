@@ -107,7 +107,7 @@ export class ProfileSettingsPage implements OnInit {
     try {
       await this.pageLoaderService.open('Saving...');
       this.isSubmitting = true;
-      this.userService.udpdateCustomer(params).subscribe(
+      this.userService.updateCustomer(params).subscribe(
         async (res) => {
           if (res.success) {
             await this.pageLoaderService.close();

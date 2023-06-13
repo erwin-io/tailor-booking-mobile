@@ -56,7 +56,11 @@ export class RegisterPage implements OnInit {
     return pass === confirmPass ? null : { notSame: true };
   };
 
-  async onFormSubmit(form: NgForm) {
+  async onFormSubmit(form: any) {
+    const params = {
+      ...form
+    }
+    params.mobileNumber = params.mobileNumber.toString().padStart(11, '0');
     if(!this.registerForm.valid){
       return;
     }
@@ -69,7 +73,14 @@ export class RegisterPage implements OnInit {
             console.log(res.data);
             await this.presentAlert({
               header: 'Saved!',
-              buttons: ['OK']
+              buttons: [
+                {
+                  text: 'Ok',
+                  handler: async ()=> {
+                    await this.pageLoaderService.close();
+                  },
+                },
+              ]
             }).then(async () =>{
               if(this.appconfig.config.auth.requireOTP === true) {
                 const navigationExtras: NavigationExtras = {
@@ -89,21 +100,33 @@ export class RegisterPage implements OnInit {
             });
             await this.pageLoaderService.close();
           } else {
-            await this.pageLoaderService.close();
             this.isSubmitting = false;
             await this.presentAlert({
               header: 'Try again!',
               message: Array.isArray(res.message) ? res.message[0] : res.message,
-              buttons: ['OK']
+              buttons:  [
+                {
+                  text: 'Ok',
+                  handler: async ()=> {
+                    await this.pageLoaderService.close();
+                  },
+                },
+              ]
             });
           }
         }, async (err) => {
-          await this.pageLoaderService.close();
           this.isSubmitting = false;
           await this.presentAlert({
             header: 'Try again!',
             message: Array.isArray(err.message) ? err.message[0] : err.message,
-            buttons: ['OK']
+            buttons: [
+              {
+                text: 'Ok',
+                handler: async ()=> {
+                  await this.pageLoaderService.close();
+                },
+              },
+            ]
           });
         });
     } catch (e){
@@ -112,7 +135,14 @@ export class RegisterPage implements OnInit {
       await this.presentAlert({
         header: 'Try again!',
         message: Array.isArray(e.message) ? e.message[0] : e.message,
-        buttons: ['OK']
+        buttons: [
+          {
+            text: 'Ok',
+            handler: async ()=> {
+              await this.pageLoaderService.close();
+            },
+          },
+        ]
       });
     }
   }

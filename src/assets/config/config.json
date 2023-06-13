@@ -10,7 +10,7 @@
     "dayOfWeekNotAvailable": ["Sunday", "Wednesday", "Saturday"]
   },
   "auth": {
-    "requireOTP": "false"
+    "requireOTP": true
     },
     "sessionConfig": {
       "sessionTimeout": "1800"
@@ -34,7 +34,7 @@
     },
     "user": {
       "getById": "users/",
-      "udpdateCustomer": "users/customer",
+      "updateCustomer": "users/customer",
       "updateFirebaseToken": "users/updateFirebaseToken",
       "changePassword": "users/changePassword",
       "updateCustomerProfilePicture": "users/customerProfilePicture"
