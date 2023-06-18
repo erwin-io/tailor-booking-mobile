@@ -21,6 +21,12 @@ import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions
 import { ImageViewerPageModule } from './component/image-viewer/image-viewer.module';
 import { SuperTabsModule } from '@ionic-super-tabs/angular';
 import { NgxIonicImageViewerModule } from 'ngx-ionic-image-viewer';
+import { provideAuth,getAuth, PhoneAuthProvider } from '@angular/fire/auth';
+import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import { provideFirebaseApp } from '@angular/fire/app';
+import { initializeApp } from 'firebase/app';
+import { environment } from 'src/environments/environment';
+import { WindowService } from './core/services/window.service';
 
 
 @NgModule({
@@ -38,11 +44,15 @@ import { NgxIonicImageViewerModule } from 'ngx-ionic-image-viewer';
     DirectiveModule,
     ImageViewerPageModule,
     SuperTabsModule.forRoot(),
-    NgxIonicImageViewerModule
+    NgxIonicImageViewerModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)), 
+    provideAuth(() => getAuth()), 
+    provideFirestore(() => getFirestore())
   ],
   providers: [
     InAppBrowser,
     AndroidPermissions,
+    WindowService,  
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     {

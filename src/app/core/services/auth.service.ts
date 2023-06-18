@@ -58,14 +58,6 @@ export class AuthService implements IServices {
     );
   }
 
-  createUserVerification(data: any): Observable<ApiResponse<Customer>> {
-    return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.auth.createUserVerification, data)
-    .pipe(
-      tap(_ => this.log('register')),
-      catchError(this.handleError('register', []))
-    );
-  }
-
   register(data: any): Observable<ApiResponse<Customer>> {
     return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.auth.register, data)
     .pipe(
@@ -79,6 +71,22 @@ export class AuthService implements IServices {
     .pipe(
       tap(_ => this.log('findByUsername')),
       catchError(this.handleError('findByUsername', []))
+    );
+  }
+
+  findByEmail(username: string): Observable<any> {
+    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.auth.findByEmail + username)
+    .pipe(
+      tap(_ => this.log('findByEmail')),
+      catchError(this.handleError('findByEmail', []))
+    );
+  }
+
+  findByMobileNumber(username: string): Observable<any> {
+    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.auth.findByMobileNumber + username)
+    .pipe(
+      tap(_ => this.log('findByMobileNumber')),
+      catchError(this.handleError('findByMobileNumber', []))
     );
   }
 

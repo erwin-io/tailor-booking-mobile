@@ -100,3 +100,52 @@
     }
   }
 }
+
+::ng-deep .verify-number-modal {
+  ion-header::after {
+    background-image: none;
+  }
+  ion-list {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 20px 20px 0 0;
+    justify-content: center;
+    ion-item {
+      ion-label {
+          font-size: 0.9rem;
+          overflow: visible;
+          gap: 20px;
+          display: flex!important;
+          flex-direction: column;
+          align-content: center;
+          span {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            &.error {
+              color: #eb445a;
+            }
+          }
+          ng-otp-input {
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            .ng-otp-input-wrapper {
+              display: flex;
+              align-content: center;
+              flex-direction: row;
+              justify-content: center;
+              &.invalid {
+                input {
+                  border: 2px solid #eb445a;
+                }
+              }
+            }
+          }
+        }
+    }
+  }
+}
+
+

@@ -22,5 +22,4 @@ export class LoginResult {
   userTypeIdentityId: string;
   totalUnreadNotif: number;
   userProfilePic: any;
-  isVerified: boolean;
 }

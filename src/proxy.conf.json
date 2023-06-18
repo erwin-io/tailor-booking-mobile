@@ -1,6 +1,0 @@
-{
-  "/api/payexpress/payprotc/": {
-    "target": "https://g.payx.ph",
-    "secure": false
-  }
-}

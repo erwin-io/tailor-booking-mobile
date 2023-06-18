@@ -11,7 +11,7 @@ export class PageLoaderService {
 
   async open(message) {
     if(this.modal){
-      await this.modal.dismiss();
+      await this.modalCtrl.dismiss();
     }
     this.modal = await this.modalCtrl.create({
       component: PageLoaderComponent,
@@ -25,7 +25,10 @@ export class PageLoaderService {
     this.modal.present();
   }
   async close() {
-    this.modal.canDismiss = true;
-    await this.modal.dismiss();
+    if(this.modal) {
+      this.modal.canDismiss = true;
+      await this.modalCtrl.dismiss();
+      this.modal = null;
+    }
   }
 }

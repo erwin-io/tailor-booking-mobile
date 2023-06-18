@@ -3,9 +3,5 @@
   "integrations": {
     "capacitor": {}
   },
-  "type": "angular",
-  "proxies": [{
-      "path": "/api/payexpress/payprotc/",
-      "proxyUrl": "https://g.payx.ph"
-  }]
+  "type": "angular"
 }

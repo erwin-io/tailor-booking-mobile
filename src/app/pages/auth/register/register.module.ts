@@ -10,6 +10,7 @@ import { RegisterPageRoutingModule } from './register-routing.module';
 import { RegisterPage } from './register.page';
 import { DirectiveModule } from 'src/app/core/directive/directive.module';
 import { PipeModule } from 'src/app/core/pipe/pipe.module';
+import { NgOtpInputModule } from  'ng-otp-input';
 
 @NgModule({
   imports: [
@@ -21,7 +22,9 @@ import { PipeModule } from 'src/app/core/pipe/pipe.module';
     MaterialModule,
     DirectiveModule,
     PipeModule,
+    NgOtpInputModule,
   ],
-  declarations: [RegisterPage]
+  declarations: [RegisterPage],
+  providers: []
 })
 export class RegisterPageModule {}

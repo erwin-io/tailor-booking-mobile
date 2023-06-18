@@ -29,9 +29,10 @@
       "logout": "auth/logout",
       "register":"auth/register/customer",
       "findByUsername": "auth/findByUsername/",
+      "findByEmail": "auth/findByEmail/",
+      "findByMobileNumber": "auth/findByMobileNumber/",
       "refreshToken": "auth/refresh-token",
-      "verifyOtp": "auth/verifyOtp",
-      "createUserVerification": "auth/createUserVerification"
+      "verifyOtp": "auth/verifyOtp"
     },
     "user": {
       "getById": "users/",
@@ -39,7 +40,6 @@
       "updateFirebaseToken": "users/updateFirebaseToken",
       "changePassword": "users/changePassword",
       "updateCustomerProfilePicture": "users/customerProfilePicture"
-
     },
     "reservation": {
       "getByStatus": "reservation/getByStatus",

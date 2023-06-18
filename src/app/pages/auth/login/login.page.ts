@@ -11,6 +11,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { PageLoaderService } from 'src/app/core/ui-service/page-loader.service';
 import { AppConfigService } from 'src/app/core/services/app-config.service';
 import { FcmService } from 'src/app/core/services/fcm.service';
+import { FirebaseAuthService } from 'src/app/core/services/firebase-auth.service';
 
 @Component({
   selector: 'app-login',
@@ -44,12 +45,13 @@ export class LoginPage implements OnInit {
     return this.loginForm.value;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loginForm = this.formBuilder.group({
       username : [null, Validators.required],
       password : [null, Validators.required],
       rememberMe : [false]
     });
+    await this.pageLoaderService.close();
   }
 
   async onFormSubmit() {

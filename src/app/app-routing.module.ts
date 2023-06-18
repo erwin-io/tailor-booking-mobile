@@ -38,13 +38,6 @@ const routes: Routes = [
     }
   },
   {
-    path: 'verify-otp',
-    loadChildren: () => import('./pages/auth/verify-otp/verify-otp.module').then( m => m.VerifyOtpPageModule),
-    data: {
-      auth: true
-    }
-  },
-  {
     path: 'signup',
     loadChildren: () => import('./pages/auth/register/register.module').then( m => m.RegisterPageModule),
     data: {

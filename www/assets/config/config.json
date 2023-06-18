@@ -10,7 +10,7 @@
     "dayOfWeekNotAvailable": ["Sunday", "Wednesday", "Saturday"]
   },
   "auth": {
-    "requireOTP": "false"
+    "requireOTP": true
     },
     "sessionConfig": {
       "sessionTimeout": "1800"
@@ -29,16 +29,17 @@
       "logout": "auth/logout",
       "register":"auth/register/customer",
       "findByUsername": "auth/findByUsername/",
+      "findByEmail": "auth/findByEmail/",
+      "findByMobileNumber": "auth/findByMobileNumber/",
       "refreshToken": "auth/refresh-token",
       "verifyOtp": "auth/verifyOtp"
     },
     "user": {
       "getById": "users/",
-      "udpdateCustomer": "users/customer",
+      "updateCustomer": "users/customer",
       "updateFirebaseToken": "users/updateFirebaseToken",
       "changePassword": "users/changePassword",
       "updateCustomerProfilePicture": "users/customerProfilePicture"
-
     },
     "reservation": {
       "getByStatus": "reservation/getByStatus",

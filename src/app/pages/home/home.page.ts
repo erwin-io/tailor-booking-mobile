@@ -10,6 +10,7 @@ import { NotificationService } from 'src/app/core/services/notification.service'
 import { StorageService } from 'src/app/core/storage/storage.service';
 import { BookingDetailsPage } from '../booking/booking-details/booking-details.page';
 import { SettingsPage } from '../settings/settings.page';
+import { PageLoaderService } from 'src/app/core/ui-service/page-loader.service';
 
 @Component({
   selector: 'app-home',
@@ -34,6 +35,7 @@ export class HomePage implements OnInit {
     private notificationService: NotificationService,
     private storageService: StorageService,
     private alertController: AlertController,
+    private pageLoaderService: PageLoaderService
   ) {
     this.currentUser = this.storageService.getLoginUser();
 
@@ -79,7 +81,8 @@ export class HomePage implements OnInit {
   );
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.pageLoaderService.close();
   }
 
   async onOpenDetails(details) {
