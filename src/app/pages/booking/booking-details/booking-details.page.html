@@ -59,6 +59,16 @@
         <h3 class="desc">Estimated completion date: </h3>
       </ion-label>
     </ion-item>
+    <ion-item class="item" *ngIf="details.reservationStatus.reservationStatusId === '4'">
+      <ion-label text-wrap>
+          <h3 class="sub">
+            <strong>
+              {{details.toPickupDateTime  | date: 'MMMM dd, YYYY @ hh:mm a' }} 
+            </strong>
+          </h3>
+        <h3 class="desc">Pickup date: </h3>
+      </ion-label>
+    </ion-item>
     <ion-item class="item" >
       <ion-icon name="alert-circle" slot="start"></ion-icon>
       <ion-label text-wrap>
