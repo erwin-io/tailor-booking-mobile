@@ -46,24 +46,7 @@ export class RegisterPage implements OnInit {
 
   ngOnInit() {
     const draft = localStorage.getItem("register-draft");
-    let data = draft ? JSON.parse(draft) : null;
-    if(!data){
-      data = {
-        //testing model 
-        //comment for prod
-        // firstName: 'Customer2', 
-        // // middleName: '', 
-        // lastName: 'Customer2', 
-        // email: 'customer2@gmail.com', 
-        // mobileNumber: '09950431207', 
-        // address: 'PH', 
-        // genderId: '1', 
-        // username: 'customer2', 
-        // password: '123456', 
-        // confirmPassword: '123456'
-        //end
-      } as any;
-    }
+    let data = draft ? JSON.parse(draft) : { };
     const { firstName, middleName, lastName, email, mobileNumber, address, birthDate, genderId, username, password, confirmPassword } = data;
     this.registerForm = this.formBuilder.group({
       firstName : [firstName, Validators.required],
@@ -127,32 +110,17 @@ export class RegisterPage implements OnInit {
       ]).toPromise();
       console.log(checkIfExist);
       if(checkIfExist[0].data) {
+        await this.pageLoaderService.close();
         await this.presentAlert({
           header: 'Username already exist!',
-          buttons: [
-            {
-              text: 'Ok',
-              handler: async ()=> {
-                this.isSubmitting = false;
-                await this.pageLoaderService.close();
-              },
-            },
-          ]
+          buttons: ['Ok']
         });
         this.isSubmitting = false;
         return;
       } else if(checkIfExist[1].data) {
         await this.presentAlert({
           header: 'Email already in use!',
-          buttons: [
-            {
-              text: 'Ok',
-              handler: async ()=> {
-                this.isSubmitting = false;
-                await this.pageLoaderService.close();
-              },
-            },
-          ]
+          buttons: ['Ok']
         });
         this.isSubmitting = false;
         return;
@@ -160,30 +128,24 @@ export class RegisterPage implements OnInit {
         await this.pageLoaderService.close();
         await this.presentAlert({
           header: 'Mobile number already in use!',
-          buttons: [
-            {
-              text: 'Ok',
-              handler: async ()=> {
-                this.isSubmitting = false;
-                await this.pageLoaderService.close();
-              },
-            },
-          ]
+          buttons: ['Ok']
         });
         this.isSubmitting = false;
+        return;
       }
       
       const phoneNumber = '+63' + Number(this.formData.mobileNumber);
       const response = await this.firebaseAuthService.signInWithPhoneNumber(phoneNumber)
       console.log(response);
 
-      this.verifyNumberModal.dismiss();
+      await this.verifyNumberModal.dismiss();
+      await this.pageLoaderService.close();
       this.openVerifyModal();
       this.isSubmitting = false;
     } catch(ex) {
-      await this.pageLoaderService.close();
       this.isSubmitting = false;
-      this.verifyNumberModal.dismiss();
+      await this.pageLoaderService.close();
+      await this.verifyNumberModal.dismiss();
       this.firebaseAuthService.appVerifier.clear();
       console.log(ex);
       // window.location.reload()
@@ -196,15 +158,7 @@ export class RegisterPage implements OnInit {
       await this.presentAlert({
         header: 'Something went wrong!',
         message: message,
-        buttons: [
-          {
-            text: 'Ok',
-            handler: async ()=> {
-              this.isSubmitting = false;
-              await this.pageLoaderService.close();
-            },
-          },
-        ]
+        buttons: ['Ok']
       });
       await this.refreshPage();
     }
@@ -253,15 +207,14 @@ export class RegisterPage implements OnInit {
       await this.pageLoaderService.open('Processing please wait...');
       const phoneNumber = '+63' + Number(this.formData.mobileNumber);
       const response = await this.firebaseAuthService.signInWithPhoneNumber(phoneNumber)
-      this.verifyNumberModal.dismiss();
-      console.log(response);       
+      await this.pageLoaderService.close();
+      console.log(response);
     } catch(ex) {
       await this.pageLoaderService.close();
+      await this.verifyNumberModal.dismiss();
       this.isSubmitting = false;
-      this.verifyNumberModal.dismiss();
       // this.firebaseAuthService.appVerifier.clear();
       console.log(ex);
-      // window.location.reload()
       let message = "Try again later.";
       if(ex?.message.includes("Firebase: Error") && ex?.message.includes("too-many-requests")) {
         message = "Too many request. Please wait for 5 minuets before you try again";
@@ -271,15 +224,7 @@ export class RegisterPage implements OnInit {
       await this.presentAlert({
         header: 'Something went wrong!',
         message: message,
-        buttons: [
-          {
-            text: 'Ok',
-            handler: async ()=> {
-              this.isSubmitting = false;
-              await this.pageLoaderService.close();
-            },
-          },
-        ]
+        buttons: ['Ok']
       });
       await this.refreshPage();
     }
@@ -299,11 +244,10 @@ export class RegisterPage implements OnInit {
       await this.pageLoaderService.open('Verifying please wait...');
       const response = await this.firebaseAuthService.verifyOtp(this.otpCtrl.value);
       console.log(response);    
-      this.isSubmitting = false;
-
       await this.register();
 
     } catch(e) {
+      await this.pageLoaderService.close();
       this.isSubmitting = false;
       console.log(e);
       this.otpCtrl.setErrors(null);
@@ -322,32 +266,15 @@ export class RegisterPage implements OnInit {
       this.authService.register(params)
       .subscribe(async res => {
         if (res.success) {
-          await this.pageLoaderService.close();
           await this.presentAlert({
             header: 'Saved!',
-            buttons: [
-              {
-                text: 'Ok',
-                handler: async ()=> {
-                  this.isSubmitting = false;
-                  await this.pageLoaderService.close();
-                },
-              },
-            ]
-          }).then(async () =>{
-            this.isSubmitting = false;
+            buttons: ['Ok']
           });
-          await this.pageLoaderService.close();
-          this.verifyNumberModal.dismiss();
-          
           const logRes = await this.authService.login(params).toPromise();
           
           this.storageService.saveRefreshToken(logRes.data.accessToken);
           this.storageService.saveAccessToken(logRes.data.refreshToken);
           this.storageService.saveTotalUnreadNotif(logRes.data.totalUnreadNotif);
-          // const today = new Date();
-          // today.setTime(today.getTime() + this.sessionTimeout * 1000);
-          // this.storageService.saveSessionExpiredDate(today);
           const userData: LoginResult = logRes.data;
           this.storageService.saveLoginUser(userData);
           localStorage.removeItem("register-draft");
@@ -356,52 +283,33 @@ export class RegisterPage implements OnInit {
           this.isSubmitting = false;
         } else {
           this.isSubmitting = false;
-          this.verifyNumberModal.dismiss();
+          await this.pageLoaderService.close();
+          await this.verifyNumberModal.dismiss();
           await this.presentAlert({
             header: 'Try again!',
             message: Array.isArray(res.message) ? res.message[0] : res.message,
-            buttons:  [
-              {
-                text: 'Ok',
-                handler: async ()=> {
-                  this.isSubmitting = false;
-                  await this.pageLoaderService.close();
-                },
-              },
-            ]
+            buttons:  ['Ok']
           });
         }
       }, async (err) => {
         this.isSubmitting = false;
-        this.verifyNumberModal.dismiss();
+        await this.pageLoaderService.close();
+        await this.verifyNumberModal.dismiss();
         await this.presentAlert({
           header: 'Try again!',
           message: Array.isArray(err.message) ? err.message[0] : err.message,
-          buttons: [
-            {
-              text: 'Ok',
-              handler: async ()=> {
-                await this.pageLoaderService.close();
-              },
-            },
-          ]
+          buttons:  ['Ok']
         });
       });
       
     } catch (e){
       await this.pageLoaderService.close();
+      await this.verifyNumberModal.dismiss();
       this.isSubmitting = false;
       await this.presentAlert({
         header: 'Try again!',
         message: Array.isArray(e.message) ? e.message[0] : e.message,
-        buttons: [
-          {
-            text: 'Ok',
-            handler: async ()=> {
-              await this.pageLoaderService.close();
-            },
-          },
-        ]
+        buttons:  ['Ok']
       });
     }
   }
@@ -415,5 +323,6 @@ export class RegisterPage implements OnInit {
     const params = this.formData;
     const data = JSON.stringify(params);
     localStorage.setItem("register-draft", data);
+    window.location.reload()
   }
 }

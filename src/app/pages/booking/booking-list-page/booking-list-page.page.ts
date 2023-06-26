@@ -100,13 +100,13 @@ export class BookingListPagePage implements OnInit {
           text: 'Details',
           handler:async () => {
             this.onOpenDetails(details);
-            actionSheet.dismiss();
+            await actionSheet.dismiss();
           }
         },
         {
           text: 'Back',
           handler:async () => {
-            actionSheet.dismiss();
+            await actionSheet.dismiss();
           }
         }
       ]

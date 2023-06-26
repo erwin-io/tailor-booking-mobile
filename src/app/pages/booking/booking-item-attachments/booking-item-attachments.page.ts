@@ -57,7 +57,7 @@ export class BookingItemAttachmentsPage implements OnInit {
                 this.orderItemAttachments = [newAttachment, ...this.orderItemAttachments];
               }
             }
-            actionSheet.dismiss();
+            await actionSheet.dismiss();
           },
         },
         {
@@ -85,13 +85,13 @@ export class BookingItemAttachmentsPage implements OnInit {
                 this.orderItemAttachments = [newAttachment, ...this.orderItemAttachments];
               }
             }
-            actionSheet.dismiss();
+            await actionSheet.dismiss();
           },
         },
         {
           text: 'Cancel',
           handler: async () => {
-            actionSheet.dismiss();
+            await actionSheet.dismiss();
           },
         },
       ],

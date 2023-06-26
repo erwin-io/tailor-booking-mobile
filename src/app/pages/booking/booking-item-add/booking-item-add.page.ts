@@ -285,7 +285,7 @@ export class BookingItemAddPage implements OnInit {
   }
 
   async onOpenDetails(){
-    this.modalCtrl.dismiss();
+    await this.modalCtrl.dismiss();
     const modal = await this.modalCtrl.create({
       component: BookingDetailsPage,
       cssClass: 'modal-fullscreen',

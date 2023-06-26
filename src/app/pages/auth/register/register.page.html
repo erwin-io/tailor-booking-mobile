@@ -192,8 +192,8 @@
     <ng-template>
       <ion-header mode="md" style="position: absolute;">
         <ion-toolbar mode="md">
-          <ion-buttons slot="start" (click)="verifyNumberModal.dismiss()">
-            <ion-button >
+          <ion-buttons slot="start" (click)="!isSubmitting ? verifyNumberModal.dismiss() : false" >
+            <ion-button [disabled]="isSubmitting">
               <ion-icon name="chevron-back" style="font-size: 2em!important;" color="primary" ></ion-icon>
             </ion-button>
           </ion-buttons>
@@ -219,11 +219,11 @@
           </ion-item>
 
           <ion-item lines="none" class="ion-margin-horizontal">
-            <ion-button fill="clear" color="primary" size="big" slot="start" (click)="resend()">
+            <ion-button fill="clear" color="primary" size="big" slot="start" (click)="resend()" [disabled]="isSubmitting">
               RESEND OTP
             </ion-button>
             
-            <ion-button fill="solid" color="primary" size="big" slot="end" (click)="verifyOtp()">
+            <ion-button fill="solid" color="primary" size="big" slot="end" (click)="verifyOtp()" [disabled]="isSubmitting">
               VERIFY
             </ion-button>
           </ion-item>

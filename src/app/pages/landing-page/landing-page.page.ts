@@ -22,6 +22,7 @@ export class LandingPagePage implements OnInit {
    }
 
   ngOnInit() {
+    localStorage.removeItem("register-draft");
   }
 
   onGetStarted() {

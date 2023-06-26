@@ -34,7 +34,7 @@ export class BookingHistoryPage implements OnInit {
       this.isLoading = true;
       this.reservationService.getByStatus({
         customerId,
-        reservationStatus: 'Completed,Cancelled'
+        reservationStatus: 'Completed,Declined,Cancelled'
       })
       .subscribe(async res => {
         if(res.success){

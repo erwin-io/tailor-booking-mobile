@@ -15,6 +15,9 @@ export class Reservation {
   orderItems: OrderItem[] = [];
   reservationStatus: ReservationStatus;
   staff: Staff;
+  submitItemsBeforeDateTime: Date;
+  toPickupDateTime: Date;
+  reasonToDecline: string;
 }
 
 export class ReservationStatus {

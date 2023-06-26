@@ -24,8 +24,8 @@ export class ImageViewerPage implements OnInit {
   profilePicErrorHandler(event) {
     event.target.src = '../../../assets/img/error_black.png';
   }
-  close() {
-    this.modalCtrl.dismiss();
+  async close() {
+    await this.modalCtrl.dismiss();
   }
 
 }
