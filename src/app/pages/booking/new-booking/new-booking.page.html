@@ -105,20 +105,21 @@
 </ion-content>
 <div class="sched-controls-bottom">
   <ion-button
-    [disabled]="isLoading || orderItems.length === 0"
+    [disabled]="isLoading || isSubmitting || orderItems.length === 0"
     *ngIf="reservationStepper.selectedIndex === 0"
     color="primary"
     size="large"
     expand="block"
     (click)="reservationStepper.next()">Next</ion-button>
   <ion-button
-    [disabled]="isLoading || !reservationForm.valid || !termsAndConditionCheck.checked"
+    [disabled]="isLoading || isSubmitting || !reservationForm.valid || !termsAndConditionCheck.checked"
     *ngIf="reservationStepper.selectedIndex === 1"
     color="primary"
     size="large"
     expand="block"
     (click)="save()">Save</ion-button>
   <ion-button
+    [disabled]="isLoading || isSubmitting"
     *ngIf="reservationStepper.selectedIndex > 0 && reservationStepper.selectedIndex <= 1"
     color="primary"
     size="large"

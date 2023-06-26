@@ -231,9 +231,8 @@ export class BookingListPagePage implements OnInit {
             handler: async () => {
               await this.pageLoaderService.open('Processing please wait...');
               this.isLoading = true;
-              this.reservationService.updateReservationStatus({
-                reservationId,
-                reservationStatusId: ReservationStatusEnum.CANCELLED
+              this.reservationService.cancelOrder({
+                reservationId
               })
                 .subscribe(async res => {
                   if (res.success) {

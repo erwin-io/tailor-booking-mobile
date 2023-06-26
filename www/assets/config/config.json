@@ -48,7 +48,7 @@
       "getReservationForADay": "reservation/getReservationForADay/",
       "createReservation": "reservation/createReservation",
       "rescheduleReservation": "reservation/rescheduleReservation",
-      "updateReservationStatus": "reservation/updateReservationStatus"
+      "cancelOrder": "reservation/cancelOrder"
     },
     "orderItem": {
       "getByReservationId": "order-item/getByReservationId/",

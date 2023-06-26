@@ -78,11 +78,11 @@ export class ReservationService implements IServices {
       );
   }
 
-  updateReservationStatus(data: any): Observable<ApiResponse<Reservation>> {
+  cancelOrder(data: any): Observable<ApiResponse<Reservation>> {
     return this.http
       .put<any>(
         environment.apiBaseUrl +
-          this.appconfig.config.apiEndPoints.reservation.updateReservationStatus,
+          this.appconfig.config.apiEndPoints.reservation.cancelOrder,
         data
       )
       .pipe(
